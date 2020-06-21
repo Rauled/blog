@@ -20,7 +20,7 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a href="/admin" class="btn btn-light">  Admin  </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -33,25 +33,15 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'tags_list_url' %}">Tags</a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+
+
+      <form class="form-inline my-2 my-lg-0" action="{% url 'posts_list_url' %}">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
+
+
     </div>
   </nav>
 
@@ -62,16 +52,55 @@
         {% block content %}
           Something
         {% endblock %}
-      </div>
+
+        {% if is_paginated %}
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item {% if not prev_urls  %} disabled {% endif %}"><a class="page-link" href="{{ prev_urls }}">Previous</a></li>
+
+          {% for num in page_object.paginator.page_range %}
+
+            {% if page_object.number == num  %}
+
+            <li class="page-item active" aria-current="page">
+              <span class="page-link" href="?page={{ num }}">
+                {{ num }}
+              <span class="sr-only">(current)</span>
+              </span>
+            </li>
+
+            {% elif num > page_object.number|add:-3 and num < page_object.number|add:3 %}
+
+              <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+              </li>
+
+            {% endif %}
+
+          {%endfor%}
+
+          <li class="page-item {% if not next_urls  %} disabled {% endif %}"><a class="page-link" href="{{ next_urls }}">Next</a></li>
+        </ul>
+      </nav>
     </div>
-  </div>
-</div>
+    </div>
+    </div>
+    </div>
+         {% endif %}
+
+
+{% if request.user.is_authenticated and request.user.is_staff %}
 
 <div class="admin-panel align-items-center">
   <a href="/admin" class="btn btn-success">  Admin  </a>
   {% block admin-panel %}
   {% endblock %}
 </div>
+
+{% endif %}
+
+
+
 
 
 </body>

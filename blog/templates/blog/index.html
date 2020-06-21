@@ -7,7 +7,7 @@
   <h1 class="mb-5">
       Cute here:
   </h1>
-  {% for post in posts %}
+  {% for post in page_object.object_list %}
     {% include 'blog/includes/post_card_template.html' %}
   {%endfor%}
 {% endblock %}

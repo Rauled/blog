@@ -60,4 +60,4 @@ class ObjectDeleteModel:
     def post(self, request, slug):
         obj = self.model.objects.get(slug__iexact=slug)
         obj.delete()
-        return redirect(revers(self.redirect_url))
+        return redirect(reverse(self.redirect_url))
